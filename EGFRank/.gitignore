@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
+*.pyc
+.env
+.env.*
+
+node_modules/
+frontend/dist/
+
+data/raw/*.csv
+data/processed/*.csv
+models/*.joblib
+models/*.pkl
