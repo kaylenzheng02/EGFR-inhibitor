@@ -9,7 +9,7 @@ __pycache__/
 node_modules/
 frontend/dist/
 
-data/raw/*.csv
+data/raw/**/*.csv
 data/processed/*.csv
 models/*.joblib
 models/*.pkl

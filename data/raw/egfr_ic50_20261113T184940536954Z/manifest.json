@@ -1,0 +1,10 @@
+{
+  "query": "https://www.ebi.ac.uk/chembl/api/data/activity.json?target_chembl_id=CHEMBL203&standard_type=IC50&order_by=activity_id&limit=500&only=activity_id%2Cmolecule_chembl_id%2Ccanonical_smiles%2Cstandard_type%2Cstandard_relation%2Cstandard_value%2Cstandard_units%2Cassay_chembl_id%2Ctarget_chembl_id%2Cdocument_chembl_id%2Cassay_type%2Cassay_description%2Ctarget_organism%2Ctarget_pref_name%2Cpchembl_value%2Cdata_validity_comment%2Cpotential_duplicate%2Cactivity_comment%2Ctype%2Crelation%2Cvalue%2Cunits",
+  "retrieved_utc": "2026-11-13T18:49:40.458756+00:00",
+  "pages": 54,
+  "reported_total": 26600,
+  "verified_unique_activity_ids": 26600,
+  "distinct_compounds_with_id": 14776,
+  "distinct_assays_with_id": 2425,
+  "sha256": "be8c4a446a5aee096738592b6b8707f7c933bd93aa8c38e3ff6a7234c50b61d7"
+}
