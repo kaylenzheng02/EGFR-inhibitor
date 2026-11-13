@@ -2,6 +2,8 @@
 
 EGFR Inhibitor is an early-stage project for exploring EGFR inhibitor activity data and developing a compound-ranking workflow. The current implementation inspects a local CSV, filters measurements, and calculates pIC50. Fingerprint generation, model training, evaluation, and ranked predictions are not implemented yet.
 
+Read the [project history](PROJECT_HISTORY.md) for the research question, dataset preparation, results, and limitations.
+
 ## Quick start
 
 Run these PowerShell commands from the **repository root (`EGFR-Inhibitor`)**:

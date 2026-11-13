@@ -6,7 +6,7 @@
 
 ## Step 1. Research question and project setup
 
-Can chemical structure help prioritize compounds for testing against human epidermal growth factor receptor (EGFR) kinase? I chose general EGFR inhibition for the first model. I organized a Git project in VS Code with a Python environment for processing data and a React and TypeScript frontend for exploring the results. I consolidated the original nested folders so commands run from one repository root. [Original project discussion](https://chatgpt.com/c/6af3b26e-dd34-83ea-9415-9bf151c62c3d) · [Project setup](../README.md)
+Can chemical structure help prioritize compounds for testing against human epidermal growth factor receptor (EGFR) kinase? I chose general EGFR inhibition for the first model. I organized a Git project in VS Code with a Python environment for processing data and a React and TypeScript frontend for exploring the results. I consolidated the original nested folders so commands run from one repository root. · [Project setup](README.md)
 
 ### Biological background
 
@@ -18,7 +18,7 @@ The intended application is early compound prioritization. A researcher with a l
 
 ## Step 2. Pilot data and checks
 
-I downloaded 100 real ChEMBL measurements with exact IC50 values in nanomolar units for human EGFR (CHEMBL203). The sample covered 82 compounds in six assays. I checked IDs, units, numerical values, and whether RDKit could read each molecular structure. All 100 passed. The preprocessor preserves the original values and calculates pIC50 as 9 minus the base-10 logarithm of IC50 in nM. For example, 41 nM gives 7.3872. [Pilot query](https://www.ebi.ac.uk/chembl/api/data/activity.json?target_chembl_id=CHEMBL203&standard_type=IC50&standard_units=nM&standard_relation=%3D&limit=100) · [Screening script](../src/egfrank/preprocess.py)
+I downloaded 100 real ChEMBL measurements with exact IC50 values in nanomolar units for human EGFR (CHEMBL203). The sample covered 82 compounds in six assays. I checked IDs, units, numerical values, and whether RDKit could read each molecular structure. All 100 passed. The preprocessor preserves the original values and calculates pIC50 as 9 minus the base-10 logarithm of IC50 in nM. For example, 41 nM gives 7.3872. [Pilot query](https://www.ebi.ac.uk/chembl/api/data/activity.json?target_chembl_id=CHEMBL203&standard_type=IC50&standard_units=nM&standard_relation=%3D&limit=100) · [Screening script](src/egfrank/preprocess.py)
 
 ### Reading a ChEMBL record
 
@@ -43,7 +43,7 @@ I used pandas to read the file as a table, NumPy for numerical calculations, and
 
 ## Step 3. Assay interpretation
 
-I looked up what each pilot experiment measured. CHEMBL68920 had values of 41 nM for kinase phosphorylation, 300 nM for receptor autophosphorylation in A431 cells, and 7,820 nM for proliferation in 3T3 cells. These are distinct experimental outcomes. Keeping the assay ID with each value lets a reader see why averaging all three would obscure useful information. [Six-assay review with links to the original records](research/egfr-sample-assays.md)
+I looked up what each pilot experiment measured. CHEMBL68920 had values of 41 nM for kinase phosphorylation, 300 nM for receptor autophosphorylation in A431 cells, and 7,820 nM for proliferation in 3T3 cells. These are distinct experimental outcomes. Keeping the assay ID with each value lets a reader see why averaging all three would obscure useful information. [Six-assay review with links to the original records](docs/research/egfr-sample-assays.md)
 
 | Observation for CHEMBL68920 | What the experiment followed | What can be concluded |
 | --- | --- | --- |
@@ -55,15 +55,15 @@ These results come from the same source document and span roughly 190-fold from 
 
 ## Step 4. Interactive demo
 
-I connected the screened sample to a React dashboard with counts calculated from the data and a compound search showing the assay ID, endpoint, IC50, and pIC50. I verified the dashboard counts and the three search results for CHEMBL68920. The frontend passed its lint and production build checks. I also fixed a Windows file replacement issue so rerunning the preprocessor skips identical exports and retries a temporarily blocked update. [React app](../frontend/src/App.tsx) · [Data export](../src/egfrank/preprocess.py)
+I connected the screened sample to a React dashboard with counts calculated from the data and a compound search showing the assay ID, endpoint, IC50, and pIC50. I verified the dashboard counts and the three search results for CHEMBL68920. The frontend passed its lint and production build checks. I also fixed a Windows file replacement issue so rerunning the preprocessor skips identical exports and retries a temporarily blocked update. [React app](frontend/src/App.tsx) · [Data export](src/egfrank/preprocess.py)
 
-The pilot also tested the path from a published measurement to what a user actually sees. The raw CSV is a table with one row per result. Running the Python script produces a screened CSV for inspection and a JSON file, a structured text format the browser can load. React reads the JSON to count distinct compound and assay IDs. Searching a compound filters the measurement rows but preserves each assay label. The dashboard therefore shows 100 measurements even though the search index contains only 82 distinct compounds. [Raw pilot CSV](../data/raw/egfr_sample.csv) · [Browser data](../frontend/public/data/egfr_sample.json)
+The pilot also tested the path from a published measurement to what a user actually sees. The raw CSV is a table with one row per result. Running the Python script produces a screened CSV for inspection and a JSON file, a structured text format the browser can load. React reads the JSON to count distinct compound and assay IDs. Searching a compound filters the measurement rows but preserves each assay label. The dashboard therefore shows 100 measurements even though the search index contains only 82 distinct compounds. [Raw pilot CSV](data/raw/egfr_sample.csv) · [Browser data](frontend/public/data/egfr_sample.json)
 
 The three-result search provided an end-to-end check with a known answer. A working search box alone would not have exposed an accidental merge of repeated compounds. Checking for all three concentrations and their corresponding assays tested precisely the information the explorer was built to preserve.
 
 ## Step 5. Full dataset acquisition
 
-On November 13, 2026, the downloader collected 26,600 IC50 measurements for target CHEMBL203 across 54 API pages. The snapshot contains 14,776 distinct compound IDs and 2,425 assay IDs. I verified the reported total against the saved CSV and checked that every activity ID was present and unique. A dated manifest records the exact query, UTC retrieval time, and file checksum. The full query preserves units and measurement bounds for later screening. [Exact full query](https://www.ebi.ac.uk/chembl/api/data/activity.json?target_chembl_id=CHEMBL203&standard_type=IC50&order_by=activity_id&limit=500&only=activity_id%2Cmolecule_chembl_id%2Ccanonical_smiles%2Cstandard_type%2Cstandard_relation%2Cstandard_value%2Cstandard_units%2Cassay_chembl_id%2Ctarget_chembl_id%2Cdocument_chembl_id%2Cassay_type%2Cassay_description%2Ctarget_organism%2Ctarget_pref_name%2Cpchembl_value%2Cdata_validity_comment%2Cpotential_duplicate%2Cactivity_comment%2Ctype%2Crelation%2Cvalue%2Cunits) · [Snapshot manifest](../data/raw/egfr_ic50_20261113T184940536954Z/manifest.json) · [Downloader](../src/egfrank/fetch_data.py)
+On November 13, 2026, the downloader collected 26,600 IC50 measurements for target CHEMBL203 across 54 API pages. The snapshot contains 14,776 distinct compound IDs and 2,425 assay IDs. I verified the reported total against the saved CSV and checked that every activity ID was present and unique. A dated manifest records the exact query, UTC retrieval time, and file checksum. The full query preserves units and measurement bounds for later screening. [Exact full query](https://www.ebi.ac.uk/chembl/api/data/activity.json?target_chembl_id=CHEMBL203&standard_type=IC50&order_by=activity_id&limit=500&only=activity_id%2Cmolecule_chembl_id%2Ccanonical_smiles%2Cstandard_type%2Cstandard_relation%2Cstandard_value%2Cstandard_units%2Cassay_chembl_id%2Ctarget_chembl_id%2Cdocument_chembl_id%2Cassay_type%2Cassay_description%2Ctarget_organism%2Ctarget_pref_name%2Cpchembl_value%2Cdata_validity_comment%2Cpotential_duplicate%2Cactivity_comment%2Ctype%2Crelation%2Cvalue%2Cunits) · [Snapshot manifest](data/raw/egfr_ic50_20261113T184940536954Z/manifest.json) · [Downloader](src/egfrank/fetch_data.py)
 
 An **application programming interface** (API) lets a program ask a database for records using explicit conditions. The larger query selected human EGFR and the standardized measurement type IC50. Unlike the pilot, it retained the reported units and relations for later review. The 26,600 count therefore describes this specific query at the time of retrieval. It includes records that would fail the later training criteria.
 
@@ -82,7 +82,7 @@ I first reviewed three enzyme assays, which yielded 950 eligible compounds. I th
 | Every eligible IC50 above 1,000 nM | 204 inactive |
 | Measurements on both sides | 2 compounds set aside |
 
-I approved 1,000 nM as the project cutoff. The training CSV has one row per compound, its structure, label, IC50 range, measurement count, and source activity and assay IDs. The terms active and inactive describe this project's cutoff. The active share is 87.25%, which is the full dataset accuracy of always guessing active. [Screening and label code](../src/egfrank/review_assays.py) · [Assay decisions](research/phase2-assay-review.csv) · [Local training CSV](../data/processed/egfr_training.csv) · [Two conflicts](../data/processed/egfr_conflicts.csv)
+I approved 1,000 nM as the project cutoff. The training CSV has one row per compound, its structure, label, IC50 range, measurement count, and source activity and assay IDs. The terms active and inactive describe this project's cutoff. The active share is 87.25%, which is the full dataset accuracy of always guessing active. [Screening and label code](src/egfrank/review_assays.py) · [Assay decisions](docs/research/phase2-assay-review.csv) · [Local training CSV](data/processed/egfr_training.csv) · [Two conflicts](data/processed/egfr_conflicts.csv)
 
 ### Why the eligibility rules matter
 
