@@ -14,6 +14,8 @@ Epidermal growth factor receptor (EGFR) is a protein that spans the membrane sur
 
 In an activated receptor pair, one receptor can phosphorylate tyrosines on its partner. This is called **autophosphorylation** because the receptor protein is itself the recipient. Other proteins can recognize these sites and pass the signal onward, influencing processes such as cell growth. This sequence gives scientists several things to measure: the enzyme transferring phosphate to a test substrate, the receptor becoming phosphorylated inside a cell, or the eventual growth of a population of cells. Each is a different observation. [EGFR function and signaling](https://www.uniprot.org/uniprotkb/P00533/entry)
 
+Non-small cell lung cancer (NSCLC) motivates this project’s focus on EGFR. The analysis uses published measurements of EGFR inhibition from a broader set of laboratory experiments.
+
 The intended application is early compound prioritization. A researcher with a limited testing budget could eventually use rankings to choose which structures to study first. The outcome defined in this project is inhibition in selected laboratory experiments. Patient response, safety, and the dose needed to treat a person would require different evidence.
 
 ## Step 2. Pilot data and checks
