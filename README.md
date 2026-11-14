@@ -1,6 +1,6 @@
 # EGFR Inhibitor
 
-EGFR Inhibitor is an early-stage project for exploring EGFR inhibitor activity data and developing a compound-ranking workflow. The current implementation inspects a local CSV, filters measurements, and calculates pIC50. Fingerprint generation, model training, evaluation, and ranked predictions are not implemented yet.
+EGFR Inhibitor is an early-stage project for exploring EGFR inhibitor activity data and developing a compound-ranking workflow. The pipeline screens ChEMBL measurements, labels compounds, and generates Morgan fingerprints. Model training and evaluation are the next stages.
 
 Read the [project history](PROJECT_HISTORY.md) for the research question, dataset preparation, results, and limitations.
 
@@ -40,12 +40,12 @@ EGFR-Inhibitor/
 `-- tests/
 ```
 
-The remaining Python modules live alongside the working preprocessor in `src/egfrank/`. Run `.\.venv\Scripts\python.exe src/egfrank/fetch_data.py` from the repository root to download the full ChEMBL EGFR IC50 query. Each successful run creates a dated directory under `data/raw` containing `egfr_ic50.csv` and `manifest.json`. The manifest records the query, retrieval time, page and ID counts, and SHA-256 checksum. The downloader preserves different units and measurement relations for later screening. Fingerprinting, training, and evaluation are placeholders.
+The remaining Python modules live alongside the working preprocessor in `src/egfrank/`. Run `.\.venv\Scripts\python.exe src/egfrank/fetch_data.py` from the repository root to download the full ChEMBL EGFR IC50 query. Each successful run creates a dated directory under `data/raw` containing `egfr_ic50.csv` and `manifest.json`. The manifest records the query, retrieval time, page and ID counts, and SHA-256 checksum. The downloader preserves different units and measurement relations for later screening. Once the training CSV is available, run `.\.venv\Scripts\python.exe src/egfrank/fingerprints.py` to generate `data/processed/egfr_fingerprints.npz`.
 
 ## Planned work
 
 
-- Add molecular fingerprints.
-- Define compound-level aggregation and dataset splitting.
+- Create a scaffold-based train/test split.
+
 - Implement and evaluate a baseline compound-ranking model.
 - Add tests for data processing and model evaluation.
