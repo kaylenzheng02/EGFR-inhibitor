@@ -42,11 +42,11 @@ def main():
     print(f"Matched {len(split)} compounds with {fingerprints.shape[1]} features each")
     print(pd.crosstab(split["label"], split["split"]))
 
-train_rows = split["split"].eq("train").to_numpy()
+    train_rows = split["split"].eq("train").to_numpy()
     X_train = fingerprints[train_rows]
     y_train = split.loc[train_rows, "label"]
 
-model = RandomForestClassifier(n_estimators=100, random_state=42)
+    model = RandomForestClassifier(n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
 
     model_dir = Path(__file__).resolve().parents[2] / "models"
