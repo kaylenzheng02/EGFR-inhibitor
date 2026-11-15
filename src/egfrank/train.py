@@ -2,6 +2,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import joblib
+from sklearn.ensemble import RandomForestClassifier
 
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "processed"
@@ -39,6 +41,8 @@ def main():
     fingerprints, split = load_training_data()
     print(f"Matched {len(split)} compounds with {fingerprints.shape[1]} features each")
     print(pd.crosstab(split["label"], split["split"]))
+
+train_rows =
 
 
 if __name__ == "__main__":
