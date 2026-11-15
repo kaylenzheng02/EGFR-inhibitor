@@ -2,7 +2,7 @@
 
 **Research question.** Can the chemical structure of a compound help us prioritize it for an experiment measuring inhibition of human EGFR kinase?
 
-**Abstract.** I used previously reported experiments to construct a dataset for answering this question. A pilot of 100 measurements exposed a central problem: the same compound can give different results when scientists measure different biological events. I traced those measurements to their experiments, built a small explorer, and applied an assay selection and quality screen to a larger download. From 26,600 records, I obtained 1,600 compounds with consistent labels under a project cutoff of 1,000 nM. I generated molecular fingerprints for all 1,600 compounds and reserved 320 compounds for testing, keeping each chemical scaffold entirely on one side of the split.
+**Abstract.** I used previously reported experiments to construct a dataset for answering this question. A pilot of 100 measurements exposed a central problem: the same compound can give different results when scientists measure different biological events. I traced those measurements to their experiments, built a small explorer, and applied an assay selection and quality screen to a larger download. From 26,600 records, I obtained 1,600 compounds with consistent labels under a project cutoff of 1,000 nM. I generated molecular fingerprints for all 1,600 compounds and reserved 320 compounds for testing, keeping each chemical scaffold entirely on one side of the split. A Random Forest trained on the other 1,280 compounds correctly classified 306 of the 320 held-out compounds and achieved a ROC-AUC of 0.929.
 
 ## Step 1. Research question and project setup
 
@@ -123,6 +123,32 @@ The script tried 100 repeatable orderings of the scaffold groups, starting with 
 
 All 1,600 compound IDs appear exactly once, and the two sets share zero scaffold groups. The 320 test compounds therefore provide a held-out set for evaluating predictions on other chemical frameworks. These counts describe the dataset split. [Split script](src/egfrank/split_data.py) · [Saved assignments](data/processed/egfr_scaffold_split.csv)
 
+## Step 10. Train the first Random Forest
+
+I matched each fingerprint to its activity label and scaffold assignment using its ChEMBL compound ID. The training script checks for duplicate IDs, missing matches, unexpected fingerprint dimensions, and labels that disagree between files. I then selected the 1,280 training compounds. Each example supplied 2,048 fingerprint bits as inputs and one experimental label, active or inactive, as the answer.
+
+I fitted a Random Forest with 100 decision trees and a random seed of 42. Each tree learns a series of decisions based on structural features. The forest averages the trees’ class probability estimates to score each compound. A higher active-class score expresses greater model confidence that the compound meets the project’s 1,000 nM activity cutoff. The classifier predicts a category rather than an exact IC50 concentration. I saved the fitted model to `models/egfr_random_forest.joblib` so I could evaluate it without retraining. [Training script](src/egfrank/train.py)
+
+## Step 11. Benchmark the model on held-out scaffolds
+
+I evaluated the saved model on 320 compounds from 105 scaffolds held out during training. The reference labels came from the same experimental cutoff used for training. Because 279 of the 320 test compounds were active, a simple baseline could achieve 87.2% accuracy by calling every compound active. I evaluated both methods on the same compounds.
+
+| Method | Correct predictions | Accuracy | ROC-AUC | Average precision for the active class |
+| --- | ---: | ---: | ---: | ---: |
+| Always predict active | 279 / 320 | 87.2% | 0.500 | 0.872 |
+| Random Forest | 306 / 320 | 95.6% | 0.929 | 0.981 |
+
+The confusion matrix shows where the forest made its 14 errors. Rows give the experimental label and columns give the model prediction.
+
+| Experimental label | Predicted inactive | Predicted active |
+| --- | ---: | ---: |
+| Inactive | 29 | 12 |
+| Active | 2 | 277 |
+
+Of the 289 compounds the forest called active, 277 met the experimental cutoff. That fraction is **active precision** (95.8%). Of the 279 experimentally active compounds, it found 277. That fraction is **active recall** (99.3%). The active-class F1 score, which combines precision and recall, was 0.98. The smaller inactive class was harder to identify. The forest recognized 29 of 41 inactive compounds (70.7% recall), compared with zero for the baseline.
+
+For compound prioritization, the order of the scores also matters. ROC-AUC measures how often an active compound ranks above an inactive one, counting ties as half credit. Average precision summarizes how concentrated the active compounds are toward the top as progressively more compounds are selected. Both figures describe the full ranking on this single scaffold split. The experimental endpoint is EGFR inhibition under the selected assay conditions. Assessing response in an NSCLC patient would require clinical evidence. [Evaluation script](src/egfrank/evaluate.py)
+
 ## Reproduce the work in PowerShell
 
 From the repository root, run the following with the project environment installed. The first command refreshes the demo. The second rebuilds the labels from the dated snapshot above. The final two start the website. To download a **new** dated snapshot, run the downloader separately with the same Python interpreter. A new download may reflect a later ChEMBL release.
@@ -132,6 +158,8 @@ From the repository root, run the following with the project environment install
 .\.venv\Scripts\python.exe src/egfrank/review_assays.py
 .\.venv\Scripts\python.exe src/egfrank/fingerprints.py
 .\.venv\Scripts\python.exe src/egfrank/split_data.py
+.\.venv\Scripts\python.exe src/egfrank/train.py
+.\.venv\Scripts\python.exe src/egfrank/evaluate.py
 cd frontend
 npm.cmd run dev
 ```
