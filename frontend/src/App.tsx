@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CompoundMap from "./CompoundMap";
 
 type Measurement = {
   activity_id: string;
@@ -18,7 +19,7 @@ const endpoints: Record<string, string> = {
 };
 
 export default function App() {
-  const [page, setPage] = useState("Dashboard");
+  const [page, setPage] = useState("Compound Map");
   const [rows, setRows] = useState<Measurement[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [search, setSearch] = useState("");
@@ -44,11 +45,11 @@ export default function App() {
 
   return <div className="shell">
     <header><h1>EGFRank</h1><p>Machine Learning-Assisted EGFR Inhibitor Prioritization</p></header>
-    <nav aria-label="Sections">{["Dashboard", "Compounds", "Model Insights"].map(name =>
+    <nav aria-label="Sections">{["Compound Map", "Dashboard", "Compounds", "Model Insights"].map(name =>
       <button key={name} aria-pressed={page === name} onClick={() => setPage(name)}>{name}</button>
     )}</nav>
     <main><h2>{page}</h2>
-      {page === "Model Insights" ? <p>Model training is planned. The explorer shows experimental measurements.</p>
+      {page === "Compound Map" ? <CompoundMap/> : page === "Model Insights" ? <p>On 320 held-out compounds the Random Forest classified 306 correctly. ROC-AUC was 0.929 and average precision was 0.981. The always-active baseline classified 279 correctly.</p>
         : failed ? <p role="alert">Could not load the sample. Run the preprocessing script and refresh this page.</p>
         : rows === null ? <p role="status">Loading measurements…</p>
         : page === "Dashboard" ? <>

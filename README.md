@@ -2,6 +2,10 @@
 
 EGFRank uses chemical structures to rank compounds by their likelihood of inhibiting human EGFR in laboratory assays. Non-small cell lung cancer (NSCLC) motivates the choice of target. The model learns from published EGFR measurements in ChEMBL, and its benchmark evaluates laboratory activity. Predicting patient response would require clinical data.
 
+## Demo
+
+Download or open [`demo/EGFRank-Demo.html`](demo/EGFRank-Demo.html) in a browser. This standalone demo includes its data and needs no installation. See the [demo instructions](demo/README.md).
+
 ## Dataset and model
 
 The [project history](PROJECT_HISTORY.md) documents how 26,600 ChEMBL records yielded 1,600 compounds with consistent activity labels. A compound qualified as active when all its eligible IC50 measurements were at or below 1,000 nM. Of the labeled compounds, 1,396 were active and 204 inactive.

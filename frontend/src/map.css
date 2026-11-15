@@ -1,0 +1,18 @@
+.shell {max-width:1500px}
+body {background:#090a0d}
+.atlas {display:grid;grid-template-columns:minmax(0,2.5fr) minmax(270px,1fr);border:1px solid #33353d;background:#090a0e}
+.plot {background:#040508;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.plot svg {width:100%;display:block}
+.plot svg g {cursor:pointer}
+.plotbar {display:flex;justify-content:space-between;gap:12px;align-items:center;padding:16px;color:#c7cad2;font-size:.82rem}
+.plotbar i {display:inline-block;width:45px;height:5px;background:linear-gradient(90deg,#d568ff,#66edcd,#edee56);vertical-align:middle}
+.atlas aside {border-left:1px solid #33353d;padding:18px}
+.atlas h3 {font-size:1.25rem;margin:0 0 14px}
+.atlas aside input {margin-bottom:10px;width:100%}
+.atlas aside p {font-size:.84rem}
+.ranklist {max-height:210px;overflow:auto;border-top:1px solid #34343b}
+.ranklist button {width:100%;display:flex;justify-content:space-between;background:transparent;border:0;border-bottom:1px solid #333;border-radius:0;color:#edf0fa}
+.ranklist button[aria-pressed=true] {background:#343142;color:white}
+.record {border-top:1px solid #444;margin-top:18px;padding-top:18px}
+.record p {display:flex;justify-content:space-between}
+@media(max-width:760px){.atlas{grid-template-columns:1fr}.atlas aside{border-left:0;border-top:1px solid #33353d}}
