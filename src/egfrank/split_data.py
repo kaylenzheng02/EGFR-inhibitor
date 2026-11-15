@@ -10,7 +10,7 @@ DATA_DIR = ROOT / "data" / "processed"
 INPUT_FILE = DATA_DIR / "egfr_training.csv"
 OUTPUT_FILE = DATA_DIR / "egfr_scaffold_split.csv"
 
-TESt_FRACTION = 0.20
+TEST_FRACTION = 0.20
 SEED = 42
 
 
@@ -21,7 +21,7 @@ def get_scaffold(smiles):
 
 
     # molecules without rings have an empty scaffold
-    #keep together as uno group for splitting
+    # Keep them together as one group for splitting.
     scaffold = MurckoScaffold.MurckoScaffoldSmiles(mol=molecule)
 
     return scaffold or "ACYCLIC"  # Return "ACYCLIC" if the scaffold is empty
@@ -32,7 +32,10 @@ def main():
     id_column = "molecule_chembl_id"
     required = [id_column, "canonical_smiles", "label"]
 
-    if data[required.isna().any().any()]:
+    missing = set(required).difference(data.columns)
+    if missing:
+        raise ValueError(f"Missing required columns: {sorted(missing)}")
+    if data[required].isna().any().any():
         raise ValueError("A compound ID, structure, or label is missing.")
     if data[id_column].duplicated().any():
         raise ValueError("The training CSV contains duplicate compound IDs.")
@@ -48,13 +51,13 @@ def main():
     best_score = float("inf")
     best_test_groups = None
 
-    #try repeatable group orderings. choose the split closest ti
-    #holding out 20% of each class, w/o spiltting scaffolds
+    # Try repeatable group orderings. Choose the split closest to
+    # holding out 20% of each class without splitting scaffolds.
     for attempt in range(100):
         shuffled = groups.sample(frac=1, random_state=SEED + attempt)
         running_counts = shuffled.cumsum()
 
-        # bofa training and testing must contain both classes.
+        # Both training and testing must contain both classes.
         valid = (running_counts > 0) & (running_counts < totals)
         candidates = running_counts.loc[valid.all(axis=1)]
         if candidates.empty:
@@ -70,10 +73,19 @@ def main():
             last_position = shuffled.index.get_loc(last_group)
             best_test_groups = shuffled.index[:last_position + 1]
 
-        if best_test_groups is None:
-            raise ValueError("could not find a scaffold split with both classes.")
+    if best_test_groups is None:
+        raise ValueError("Could not find a scaffold split with both classes.")
 
-        data["split"] = "train"
-        data.loc[data["scaffold"].isin(best_test_groups), "split"] = "test"
+    data["split"] = "train"
+    data.loc[data["scaffold"].isin(best_test_groups), "split"] = "test"
 
-        if data.groupby("scaffold")["split"].nunique().
+    if data.groupby("scaffold")["split"].nunique().gt(1).any():
+        raise ValueError("A scaffold appears in both training and test sets.")
+
+    data.to_csv(OUTPUT_FILE, index=False)
+    print(pd.crosstab(data["split"], data["label"]))
+    print(f"Saved scaffold split to {OUTPUT_FILE}")
+
+
+if __name__ == "__main__":
+    main()

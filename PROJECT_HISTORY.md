@@ -2,7 +2,7 @@
 
 **Research question.** Can the chemical structure of a compound help us prioritize it for an experiment measuring inhibition of human EGFR kinase?
 
-**Abstract.** I used previously reported experiments to construct a dataset for answering this question. A pilot of 100 measurements exposed a central problem: the same compound can give different results when scientists measure different biological events. I traced those measurements to their experiments, built a small explorer, and applied an assay selection and quality screen to a larger download. From 26,600 records, I obtained 1,600 compounds with consistent labels under a project cutoff of 1,000 nM. The completed work establishes the dataset and its provenance.
+**Abstract.** I used previously reported experiments to construct a dataset for answering this question. A pilot of 100 measurements exposed a central problem: the same compound can give different results when scientists measure different biological events. I traced those measurements to their experiments, built a small explorer, and applied an assay selection and quality screen to a larger download. From 26,600 records, I obtained 1,600 compounds with consistent labels under a project cutoff of 1,000 nM. I generated molecular fingerprints for all 1,600 compounds and reserved 320 compounds for testing, keeping each chemical scaffold entirely on one side of the split.
 
 ## Step 1. Research question and project setup
 
@@ -104,6 +104,25 @@ Phase 2 produced 1,600 examples with structures and labels. The saved files were
 
 **Limitations.** Chemical series, assay conditions, and publication choices influence which compounds appear in this collection. Automated description matching may overlook eligible experiments or admit a poorly specified one. Measurements close to the cutoff can change class with small experimental differences. Only 204 labeled compounds fall in the inactive group. Consequently, someone predicting “active” for every row would be correct 1,396 times out of 1,600 while identifying zero inactive compounds. The resulting 87.25% is a property of the dataset, not a score achieved by a trained model.
 
+## Step 8. Represent each compound as a molecular fingerprint
+
+I converted the SMILES structure for each of the 1,600 labeled compounds into a Morgan fingerprint using RDKit. The algorithm examines the neighborhood around each atom, extending up to two bonds away. It records the features it finds in a row of 2,048 bits. A bit switches on when a feature maps to that position. Several features can map to the same bit. I enabled chirality so the calculation can account for three-dimensional arrangements specified in the input structure.
+
+The saved fingerprint matrix has 1,600 rows and 2,048 columns. I verified that each row contained at least one set bit and that the compound IDs and activity labels matched the training CSV in order. The compressed NumPy file stores those IDs and labels alongside the matrix, the fingerprint settings, and the RDKit version. This keeps each numerical representation traceable to its original experimental record. [Fingerprint script](src/egfrank/fingerprints.py) · [Saved fingerprints](data/processed/egfr_fingerprints.npz)
+
+## Step 9. Reserve chemical scaffolds for testing
+
+Two compounds can have different ChEMBL IDs while sharing the same central ring structure. Placing close relatives on opposite sides of a random split can make a test easier because the model has already seen examples from the same chemical family. I used RDKit to calculate a Murcko scaffold, the framework formed by a molecule's rings and the chains connecting them. I kept all compounds with the same scaffold together and assigned molecules without rings to one group called `ACYCLIC`.
+
+The script tried 100 repeatable orderings of the scaffold groups, starting with random seed 42. It chose the assignment closest to reserving 20% of each activity class for testing, with both classes represented on each side. I checked the saved assignments directly.
+
+| Set | Active | Inactive | Total compounds | Scaffold groups |
+| --- | ---: | ---: | ---: | ---: |
+| Training | 1,117 | 163 | 1,280 | 435 |
+| Test | 279 | 41 | 320 | 105 |
+
+All 1,600 compound IDs appear exactly once, and the two sets share zero scaffold groups. The 320 test compounds therefore provide a held-out set for evaluating predictions on other chemical frameworks. These counts describe the dataset split. [Split script](src/egfrank/split_data.py) · [Saved assignments](data/processed/egfr_scaffold_split.csv)
+
 ## Reproduce the work in PowerShell
 
 From the repository root, run the following with the project environment installed. The first command refreshes the demo. The second rebuilds the labels from the dated snapshot above. The final two start the website. To download a **new** dated snapshot, run the downloader separately with the same Python interpreter. A new download may reflect a later ChEMBL release.
@@ -111,6 +130,8 @@ From the repository root, run the following with the project environment install
 ```powershell
 .\.venv\Scripts\python.exe src/egfrank/preprocess.py
 .\.venv\Scripts\python.exe src/egfrank/review_assays.py
+.\.venv\Scripts\python.exe src/egfrank/fingerprints.py
+.\.venv\Scripts\python.exe src/egfrank/split_data.py
 cd frontend
 npm.cmd run dev
 ```
