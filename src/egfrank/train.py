@@ -10,9 +10,11 @@ ID = "molecule_chembl_id"
 
 def load_training_data():
     split = pd.read_csv(DATA_DIR / "egfr_scaffold_split.csv")
-    split = split.set_index(ID, verify_integrity=True)
+    split = split.set_index(ID)
+    if not split.index.is_unique:
+        raise ValueError("duplicate compound IDs in the scaffold split file")
 
-    with np.load(DATA_DIR / "egfr_training.npz") as saved:
+    with np.load(DATA_DIR / "egfr_fingerprints.npz") as saved:
         fingerprints = saved["fingerprints"]
         ids = pd.Index(saved[ID], name=ID)
         labels = saved["label"]
