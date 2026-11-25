@@ -163,7 +163,11 @@ The export contains 164 compounds with the maximum model score of 1.00. Their re
 
 ### Prototype verification and availability
 
-The frontend production build passed after the interactive map was added. The local browser connection subsequently failed, so a standalone HTML snapshot was created as a temporary demonstration artifact. During the November 18 documentation check, that HTML file was absent from the project root. The React source and exported map dataset were present. End-to-end browser operation remains unverified in this record.
+The frontend production build passed after the interactive map was added. The local browser connection subsequently failed, so a standalone HTML snapshot was created as a demonstration artifact. The November 18 documentation check looked for that snapshot in the project root and recorded it as absent. It had been moved to `demo/EGFRank-Demo.html` three days earlier, so that entry describes where the check looked rather than a file the project had lost.
+
+I rechecked the prototype on November 25. The snapshot carries both datasets inline as base64 `data:application/json` URIs instead of requesting them, which is why it opens with no server. Decoding them returned 320 compound-map records and 100 pilot measurements, and their SHA-256 digests match `frontend/public/data/compound_map.json` and `frontend/public/data/egfr_sample.json`. The snapshot therefore presents the same data the pipeline exported. The linter reported no findings, and the production build compiled 18 modules. A development server returned the application shell, the module entry point, and both data files, and the served map parsed to 320 records.
+
+These checks establish the production build and the data path from export to browser request. They do not exercise rendering or interaction, so the visual behavior of the map and the ranked list rests on manual use.
 
 ## Reproduce the work in PowerShell
 

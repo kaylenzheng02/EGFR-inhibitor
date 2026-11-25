@@ -48,9 +48,9 @@ Training saves `models/egfr_random_forest.joblib`. If the saved model, fingerpri
 
 To rebuild the labels, run `src/egfrank/review_assays.py` with the project Python interpreter. It expects the original local CSV at `data/raw/egfr_ic50_20261113T184940536954Z/egfr_ic50.csv`. The [snapshot manifest](data/raw/egfr_ic50_20261113T184940536954Z/manifest.json) records its checksum. The [downloader](src/egfrank/fetch_data.py) creates a new dated snapshot on each run. To analyze a new snapshot, update the review script’s `SNAPSHOT` path first. A newer ChEMBL release can yield different counts and scores.
 
-## Explore the pilot data
+## Explore the data
 
-The React app displays experimental data from the original pilot. From the repository root:
+The React app opens on an interactive map of the model's held-out predictions and also carries a dashboard, a searchable table of the pilot measurements, and a benchmark summary. From the repository root:
 
 ```powershell
 cd frontend
@@ -60,4 +60,6 @@ npm.cmd run dev
 
 Open the local URL printed by Vite. To refresh the pilot from `data/raw/egfr_sample.csv`, run `src/egfrank/preprocess.py` with the project Python interpreter from the repository root. It screens measurements and calculates `pIC50 = 9 - log10(IC50 in nM)`.
 
-The next milestone is to export the model’s ranked test compounds and show their scores alongside the experimental labels in the dashboard.
+[`src/egfrank/export_map.py`](src/egfrank/export_map.py) writes the ranked held-out compounds, their model scores, and their experimental labels to `frontend/public/data/compound_map.json`, which the compound map reads. Regenerate it with the project Python interpreter after retraining.
+
+The next milestone is a variant-specific model. [`src/egfrank/review_mutant_assays.py`](src/egfrank/review_mutant_assays.py) screens the EGFR variants that drive NSCLC — L858R, exon 19 deletions, T790M, and C797S — which the wild-type screen deliberately excludes, and labels each compound separately for each variant so potencies measured against different proteins are never pooled.
