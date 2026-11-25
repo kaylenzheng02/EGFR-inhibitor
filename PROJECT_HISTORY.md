@@ -149,6 +149,22 @@ Of the 289 compounds the forest called active, 277 met the experimental cutoff. 
 
 For compound prioritization, the order of the scores also matters. ROC-AUC measures how often an active compound ranks above an inactive one, counting ties as half credit. Average precision summarizes how concentrated the active compounds are toward the top as progressively more compounds are selected. Both figures describe the full ranking on this single scaffold split. The experimental endpoint is EGFR inhibition under the selected assay conditions. Assessing response in an NSCLC patient would require clinical evidence. [Evaluation script](src/egfrank/evaluate.py)
 
+## Step 12. Export predictions and build an interactive compound map
+
+I exported the saved model's activity scores for all 320 held-out compounds to a JSON file that the React app can read. Each record contains its ChEMBL ID, experimental label, minimum and maximum eligible IC50, model score, map coordinates, and neighboring compound indices. The export connects the trained model to the interface. [Export script](src/egfrank/export_map.py) · [Map dataset](frontend/public/data/compound_map.json)
+
+To calculate chemical similarity, I compared the compounds' Morgan fingerprints using Tanimoto similarity. This divides the number of shared set bits by the number set in either fingerprint. I converted similarity to distance by subtracting it from one, then used t-SNE to place the compounds on a two-dimensional map. t-SNE compresses a high-dimensional representation while emphasizing local neighborhoods. Its plotted coordinates support exploration, while the fingerprint comparison supplies the actual similarity measurement. The export uses random seed 42 and perplexity 15. Edges connect each compound to its four closest fingerprint neighbors.
+
+The React prototype supports searching by ChEMBL ID, selecting a compound through the map or ranked list, and viewing its measured IC50 range and activity label. A control highlights twelve compounds to illustrate the fictional laboratory's testing budget. Scores are sorted from highest to lowest, with ChEMBL ID used to order equal scores. [Interactive map](frontend/src/CompoundMap.tsx)
+
+### Interpret tied scores
+
+The export contains 164 compounds with the maximum model score of 1.00. Their relative positions in the list follow the ID ordering. That ordering gives a repeatable display choice, while the model assigns the same score to every member of this group. Consequently, the highlighted twelve represent one selection from a much larger tied group. A score of 1.00 describes the forest's output for the active class under this model and training setup. Experimental confirmation remains necessary.
+
+### Prototype verification and availability
+
+The frontend production build passed after the interactive map was added. The local browser connection subsequently failed, so a standalone HTML snapshot was created as a temporary demonstration artifact. During the November 18 documentation check, that HTML file was absent from the project root. The React source and exported map dataset were present. End-to-end browser operation remains unverified in this record.
+
 ## Reproduce the work in PowerShell
 
 From the repository root, run the following with the project environment installed. The first command refreshes the demo. The second rebuilds the labels from the dated snapshot above. The final two start the website. To download a **new** dated snapshot, run the downloader separately with the same Python interpreter. A new download may reflect a later ChEMBL release.
@@ -160,6 +176,7 @@ From the repository root, run the following with the project environment install
 .\.venv\Scripts\python.exe src/egfrank/split_data.py
 .\.venv\Scripts\python.exe src/egfrank/train.py
 .\.venv\Scripts\python.exe src/egfrank/evaluate.py
+.\.venv\Scripts\python.exe src/egfrank/export_map.py
 cd frontend
 npm.cmd run dev
 ```
