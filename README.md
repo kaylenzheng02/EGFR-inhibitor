@@ -71,3 +71,12 @@ Run the provisional L858R-only screen from the repository root:
 ```
 
 The command writes the generated assay audit to `docs/research/l858r-assay-review.csv` and target-specific training, conflict, exclusion, and summary files under `data/processed`. Reviewed decisions and notes live in `docs/research/l858r-assay-decisions.csv`, so they remain separate from the regenerated audit. All 47 current candidate assays are reviewed and included. Run the command with `--require-reviewed` to verify that no candidate introduced by a future data or parser change remains pending.
+
+Generate the L858R fingerprints and run the pre-benchmark dataset validation with:
+
+```powershell
+.\.venv\Scripts\python.exe src/egfrank/fingerprints.py --target L858R
+.\.venv\Scripts\python.exe src/egfrank/validate_l858r_dataset.py
+```
+
+The [validation report](docs/research/l858r-dataset-validation.md) records identity, label, provenance, chemical-scaffold, and fingerprint checks. The dataset passes those checks and is ready for a leakage-safe split. The split must keep both each Murcko scaffold and each identical-fingerprint group entirely on one side; several distinct structures produce the same hashed fingerprint.

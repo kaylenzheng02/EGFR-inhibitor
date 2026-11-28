@@ -1,0 +1,91 @@
+{
+  "status": "passed",
+  "target": "EGFR L858R",
+  "cutoff_nm": 1000,
+  "dataset": {
+    "path": "data/processed/egfr_L858R_training.csv",
+    "sha256": "a87a91cef44e2a0b028178cbeedad7a0c5eb0be5afd35eb0721888b2827a43fc",
+    "compounds": 329,
+    "unique_compound_ids": 329,
+    "active": 281,
+    "inactive": 48,
+    "active_fraction": 0.8541033434650456,
+    "always_active_accuracy": 0.8541033434650456,
+    "measurements": 343,
+    "multi_measurement_compounds": 8,
+    "near_cutoff_800_to_1200_nm": 8,
+    "rdkit_canonical_changes": 0,
+    "duplicate_rdkit_structures": 0,
+    "evidence_grades": {
+      "A": 7,
+      "B": 1,
+      "C": 321
+    }
+  },
+  "provenance": {
+    "reviewed_included_assays": 47,
+    "contributing_assays": 42,
+    "included_assays_without_eligible_measurements": [
+      "CHEMBL4342867",
+      "CHEMBL4379304",
+      "CHEMBL4603464",
+      "CHEMBL4771365",
+      "CHEMBL5150414"
+    ],
+    "contributing_documents": 40
+  },
+  "scaffolds": {
+    "definition": "RDKit Murcko scaffold without chirality; ringless structures use ACYCLIC",
+    "groups": 161,
+    "active_scaffolds": 142,
+    "inactive_scaffolds": 27,
+    "mixed_label_scaffolds": 8,
+    "singleton_scaffolds": 109,
+    "largest_group": 18,
+    "acyclic_compounds": 0
+  },
+  "fingerprints": {
+    "path": "data/processed/egfr_L858R_fingerprints.npz",
+    "sha256": "ec96c0108b77c5eb1900daebbbddf6710fc830e28b61cf104bc774f11303def4",
+    "shape": [
+      329,
+      2048
+    ],
+    "radius": 2,
+    "size": 2048,
+    "include_chirality": true,
+    "rdkit_version": "2026.09.1",
+    "runtime_rdkit_version": "2026.09.1",
+    "target": "L858R",
+    "source_file": "egfr_L858R_training.csv",
+    "minimum_set_bits": 35,
+    "median_set_bits": 68.0,
+    "maximum_set_bits": 105,
+    "duplicate_fingerprint_rows": 9,
+    "duplicate_fingerprint_groups": 7,
+    "cross_label_fingerprint_groups": 1,
+    "cross_scaffold_fingerprint_groups": 6,
+    "cross_label_group_members": [
+      {
+        "fingerprint_group": "62251cddac3ec881f91598bac15a87dddf9bb207472e06edff7008e4b637bdfa",
+        "members": [
+          {
+            "molecule_chembl_id": "CHEMBL5192038",
+            "label": "active",
+            "canonical_smiles": "COc1cc2ncnc3c2cc1OCCOCCOCCOc1c(Cl)cccc1N3"
+          },
+          {
+            "molecule_chembl_id": "CHEMBL5205073",
+            "label": "inactive",
+            "canonical_smiles": "COc1cc2ncnc3c2cc1OCCOCCOc1c(Cl)cccc1N3"
+          }
+        ]
+      }
+    ]
+  },
+  "benchmark_readiness": {
+    "passed_identity_and_label_checks": true,
+    "scaffold_split_not_yet_created": true,
+    "primary_limitation": "Most labels rely on one eligible measurement and only 27 scaffolds contain an inactive compound."
+  }
+}
