@@ -57,7 +57,7 @@ Exactly 1,000 nM belongs to the active class. Conflicts are preserved for review
 
 ## Why L858R is first
 
-The current automated mutant screen contains 294 consistently labeled single-L858R compound pairs: 246 active and 48 inactive. These counts are provisional until the L858R assay audit is completed, but L858R currently has the strongest combination of relevance and two-class coverage among the single variants in the snapshot. By comparison, the current extraction has too few single-variant exon 19 deletion or C797S examples to support a two-class model.
+The original all-variant screen contains 294 consistently labeled single-L858R compound pairs: 246 active and 48 inactive. The target-specific screen expands mutation-alias and biochemical-method recognition and produces 329 pairs: 281 active and 48 inactive. The difference comes from six assays that the two automated rules classify differently, including Leu858Arg notation and HTRF descriptions. All 47 target-specific candidate assays have been reviewed and included, so these are the final counts for the frozen snapshot under the current target and screening rules. L858R has the strongest combination of relevance and two-class coverage among the single variants in the snapshot; the current extraction has too few single-variant exon 19 deletion or C797S examples to support a two-class model.
 
 ## Relationship to the twelve-compound goal
 

@@ -177,6 +177,14 @@ The existing project cutoff remains unchanged. A compound is active when every e
 
 The model's role is to rank compounds for a later laboratory shortlist. Its held-out labeled compounds will measure retrospective performance; they are not a prospective candidate library. The final twelve-compound selection must come from a separate collection whose outcomes were not used for training or evaluation. [L858R target specification](docs/research/l858r-target-spec.md) · [Current mutant screen](src/egfrank/review_mutant_assays.py)
 
+## Step 14. Build the L858R assay-review pipeline
+
+I added a target-specific command that recognizes common L858R mutation notation, keeps mutation combinations separate, classifies assay endpoints, records exclusion reasons, and applies the existing activity-quality checks. Its assay audit preserves explicit manual decisions and review notes between runs. A strict review gate stops the workflow while any automated candidate remains pending. The original no-argument command continues to reproduce the earlier all-variant exports and counts.
+
+The first run found 473 assay descriptions naming L858R, of which 47 were automated candidates for the single-L858R biochemical endpoint. I reviewed all 47 against the fixed target. Each description assigns a biochemical enzyme readout to L858R without naming wild type, another mutation, or a cellular endpoint; the corresponding activity rows consistently identify human EGFR target CHEMBL203, assay type B, and a source document. I included all 47 and recorded the decisions separately from the generated audit. The strict review gate now passes with zero pending candidates.
+
+The reviewed assays contain 470 measurements before activity-level screening. The quality rules retain 343 measurements and produce 329 consistent compound labels: 281 active and 48 inactive, with no cross-cutoff conflicts. Of these labels, 321 rely on one eligible measurement. These are the final counts for the frozen snapshot under the current target and screening rules; their reliance on mostly single measurements remains a limitation for later evaluation. [L858R assay decisions](docs/research/l858r-assay-decisions.csv) · [Generated assay audit](docs/research/l858r-assay-review.csv) · [Screening and labeling code](src/egfrank/review_mutant_assays.py) · [Target specification](docs/research/l858r-target-spec.md)
+
 ## Reproduce the work in PowerShell
 
 From the repository root, run the following with the project environment installed. The first command refreshes the demo. The second rebuilds the labels from the dated snapshot above. The final two start the website. To download a **new** dated snapshot, run the downloader separately with the same Python interpreter. A new download may reflect a later ChEMBL release.

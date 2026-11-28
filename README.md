@@ -63,3 +63,11 @@ Open the local URL printed by Vite. To refresh the pilot from `data/raw/egfr_sam
 [`src/egfrank/export_map.py`](src/egfrank/export_map.py) writes the ranked held-out compounds, their model scores, and their experimental labels to `frontend/public/data/compound_map.json`, which the compound map reads. Regenerate it with the project Python interpreter after retraining.
 
 The next milestone is a variant-specific model. The first fixed target is **single-mutant EGFR L858R biochemical inhibition**, using exact IC50 measurements and the existing 1,000 nM activity cutoff. L858R/T790M and every other mutation combination remain separate prediction targets. The [target specification](docs/research/l858r-target-spec.md) defines the endpoint, eligibility rules, exclusions, labeling rule, and modeling gate. [`src/egfrank/review_mutant_assays.py`](src/egfrank/review_mutant_assays.py) is the current automated screen; its L858R assay decisions must be audited before model training.
+
+Run the provisional L858R-only screen from the repository root:
+
+```powershell
+.\.venv\Scripts\python.exe src/egfrank/review_mutant_assays.py --variant L858R
+```
+
+The command writes the generated assay audit to `docs/research/l858r-assay-review.csv` and target-specific training, conflict, exclusion, and summary files under `data/processed`. Reviewed decisions and notes live in `docs/research/l858r-assay-decisions.csv`, so they remain separate from the regenerated audit. All 47 current candidate assays are reviewed and included. Run the command with `--require-reviewed` to verify that no candidate introduced by a future data or parser change remains pending.

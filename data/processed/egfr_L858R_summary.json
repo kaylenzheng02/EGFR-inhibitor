@@ -1,0 +1,24 @@
+{
+  "target": "EGFR L858R",
+  "endpoint": "biochemical kinase inhibition IC50",
+  "cutoff_nm": 1000,
+  "source_snapshot": "data/raw/egfr_ic50_20261113T184940536954Z/egfr_ic50.csv",
+  "review_complete": true,
+  "status": "reviewed",
+  "assays_naming_L858R": 473,
+  "automated_candidate_assays": 47,
+  "pending_candidate_assays": 0,
+  "included_assays": 47,
+  "candidate_measurements": 470,
+  "eligible_measurements": 343,
+  "excluded_candidate_measurements": 127,
+  "labeled_compounds": 329,
+  "active_compounds": 281,
+  "inactive_compounds": 48,
+  "conflicting_compounds": 0,
+  "evidence_grades": {
+    "A": 7,
+    "B": 1,
+    "C": 321
+  }
+}
