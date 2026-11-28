@@ -169,6 +169,14 @@ I rechecked the prototype on November 25. The snapshot carries both datasets inl
 
 These checks establish the production build and the data path from export to browser request. They do not exercise rendering or interaction, so the visual behavior of the map and the ranked list rests on manual use.
 
+## Step 13. Fix the first variant prediction target
+
+I fixed the first variant-specific target as biochemical inhibition of human EGFR carrying L858R as its sole named alteration. One example will represent one compound and its eligible exact IC50 evidence against that protein. L858R/T790M, L858R/C797S, wild-type EGFR, and other signatures remain separate targets because their measurements describe different protein forms. Cellular phosphorylation, proliferation, viability, binding-affinity, and degradation endpoints are outside this first target.
+
+The existing project cutoff remains unchanged. A compound is active when every eligible single-L858R IC50 is at or below 1,000 nM, inactive when every eligible value is above 1,000 nM, and conflicting when measurements fall on both sides. Exactly 1,000 nM is active. The current automated screen yields 246 active and 48 inactive single-L858R compound pairs, but these counts are provisional until each candidate L858R assay has an explicit reviewed decision.
+
+The model's role is to rank compounds for a later laboratory shortlist. Its held-out labeled compounds will measure retrospective performance; they are not a prospective candidate library. The final twelve-compound selection must come from a separate collection whose outcomes were not used for training or evaluation. [L858R target specification](docs/research/l858r-target-spec.md) · [Current mutant screen](src/egfrank/review_mutant_assays.py)
+
 ## Reproduce the work in PowerShell
 
 From the repository root, run the following with the project environment installed. The first command refreshes the demo. The second rebuilds the labels from the dated snapshot above. The final two start the website. To download a **new** dated snapshot, run the downloader separately with the same Python interpreter. A new download may reflect a later ChEMBL release.
