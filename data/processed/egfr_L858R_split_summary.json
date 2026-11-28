@@ -1,0 +1,86 @@
+{
+  "status": "passed",
+  "target": "EGFR L858R",
+  "source_file": "data/processed/egfr_L858R_scaffolds.csv",
+  "source_sha256": "08f8302fa7348da159b2b17621222aba14b3ea42eb323054b13d06daca6d3626",
+  "output_file": "data/processed/egfr_L858R_scaffold_split.csv",
+  "output_sha256": "cceeecf51f06ee9a28282b5a57a9db09414d79a1d397b030772349174290aef7",
+  "settings": {
+    "test_fraction": 0.2,
+    "seed": 42,
+    "search_attempts": 25000,
+    "grouping": "connected components of Murcko scaffold and identical fingerprint"
+  },
+  "connected_groups": 156,
+  "test_fractions": {
+    "overall": 0.2006079027355623,
+    "active": 0.199288256227758,
+    "inactive": 0.20833333333333334
+  },
+  "partitions": {
+    "train": {
+      "compounds": 263,
+      "active": 225,
+      "inactive": 38,
+      "active_fraction": 0.8555133079847909,
+      "connected_groups": 125,
+      "scaffolds": 130,
+      "fingerprint_groups": 254,
+      "evidence_grade_A": 6,
+      "evidence_grade_B": 1,
+      "evidence_grade_C": 256
+    },
+    "test": {
+      "compounds": 66,
+      "active": 56,
+      "inactive": 10,
+      "active_fraction": 0.8484848484848485,
+      "connected_groups": 31,
+      "scaffolds": 31,
+      "fingerprint_groups": 66,
+      "evidence_grade_A": 1,
+      "evidence_grade_B": 0,
+      "evidence_grade_C": 65
+    }
+  },
+  "leakage_checks": {
+    "compound_ids_crossing_split": 0,
+    "canonical_structures_crossing_split": 0,
+    "scaffolds_crossing_split": 0,
+    "fingerprint_groups_crossing_split": 0,
+    "connected_groups_crossing_split": 0
+  },
+  "test_split_groups": [
+    "0141aa1a5ca1ae1b",
+    "0440b2f37bca6a80",
+    "0a7c39d4905b8ec7",
+    "1517cecefee87332",
+    "1cc3a3c3b0ac3239",
+    "256c8705f981106a",
+    "2d3bd5ab957c6601",
+    "2d51a8abfabd7ed5",
+    "39cdbe90bf086b2d",
+    "3beb84d3a59741e3",
+    "3e96f7d6d64f2c7f",
+    "3eb297b28ad6da91",
+    "42c9f00f9d5dda38",
+    "43af373c7dbbda17",
+    "450171ffc3475539",
+    "50e7587ed863caaa",
+    "542d13cf6e8ae702",
+    "56bb58d6d9ec4a0f",
+    "5b9044d6a729b36d",
+    "793f9a44739418db",
+    "7db5f6f4942e9d43",
+    "7fcfe78926fdd90e",
+    "8c1c40e28b5293df",
+    "93753b039494c9db",
+    "a6ef6c0e6f42c26d",
+    "a9bb8c655b7be1a4",
+    "b0d44f80ed805c75",
+    "cbca2890417d032e",
+    "d58a9c4160b57a3f",
+    "f705f608e5ee9d2d",
+    "fa01567ee1e3e96b"
+  ]
+}

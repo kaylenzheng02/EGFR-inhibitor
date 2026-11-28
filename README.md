@@ -80,3 +80,11 @@ Generate the L858R fingerprints and run the pre-benchmark dataset validation wit
 ```
 
 The [validation report](docs/research/l858r-dataset-validation.md) records identity, label, provenance, chemical-scaffold, and fingerprint checks. The dataset passes those checks and is ready for a leakage-safe split. The split must keep both each Murcko scaffold and each identical-fingerprint group entirely on one side; several distinct structures produce the same hashed fingerprint.
+
+Create and validate the frozen L858R benchmark split with:
+
+```powershell
+.\.venv\Scripts\python.exe src/egfrank/split_data.py --target L858R
+```
+
+The [split validation report](docs/research/l858r-split-validation.md) records a 263-compound training partition and a 66-compound held-out test partition. No compound ID, canonical structure, Murcko scaffold, identical-fingerprint group, or connected split group crosses the boundary. The held-out set must not be used for model selection.

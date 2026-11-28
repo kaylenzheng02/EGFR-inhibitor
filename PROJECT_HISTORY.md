@@ -193,6 +193,14 @@ The 329 structures occupy 161 Murcko scaffold groups. Of those, 142 contain an a
 
 I generated 2,048-bit radius-2 Morgan fingerprints with chirality enabled. All rows contain set bits, but seven groups of distinct structures produce identical fingerprint rows. Six such groups span different Murcko scaffolds, and one contains both an active and an inactive compound. The scaffold inventory therefore carries a stable fingerprint-group identifier. A future split must keep connected scaffold and identical-fingerprint groups together so the same model input cannot appear in both training and testing. [Dataset validation report](docs/research/l858r-dataset-validation.md) · [Validation code](src/egfrank/validate_l858r_dataset.py) · [Fingerprint code](src/egfrank/fingerprints.py)
 
+## Step 16. Freeze a leakage-safe L858R benchmark split
+
+I connected compounds whenever they share a Murcko scaffold or an identical Morgan fingerprint. This transitive grouping prevents a fingerprint-equivalent pair from crossing the boundary even when its structures have different scaffolds. The 329 compounds form 156 connected groups. With random seed 42, the split search evaluated 25,000 reproducible whole-group assignments and selected one matching the rounded 20% targets for both activity classes.
+
+The frozen training partition contains 263 compounds: 225 active and 38 inactive across 130 scaffolds. The held-out test partition contains 66 compounds: 56 active and 10 inactive across 31 scaffolds. It therefore holds 20.1% of all compounds, 19.9% of active compounds, and 20.8% of inactive compounds. Compound IDs, canonical structures, scaffolds, identical-fingerprint groups, and connected split groups each have zero overlap between training and testing. The fingerprint-equivalent active/inactive pair remains together in training.
+
+This split is now fixed for the first L858R benchmark. Model and hyperparameter selection must use the training partition with training-only grouped validation. The test set will be evaluated only after those decisions are frozen. Because it contains 10 inactive compounds, one inactive error changes test inactive recall by 10 percentage points; raw counts must accompany every final metric. [Split validation report](docs/research/l858r-split-validation.md) · [Split code](src/egfrank/split_data.py)
+
 ## Reproduce the work in PowerShell
 
 From the repository root, run the following with the project environment installed. The first command refreshes the demo. The second rebuilds the labels from the dated snapshot above. The final two start the website. To download a **new** dated snapshot, run the downloader separately with the same Python interpreter. A new download may reflect a later ChEMBL release.
